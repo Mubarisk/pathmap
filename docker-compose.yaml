@@ -1,0 +1,31 @@
+version: "3"
+services:
+  frontend:
+    build:
+      context: ./frontend
+    ports:
+      - "3000:3000" # Assuming your FE runs on port 3000
+    volumes:
+      - ./frontend:/app # Mount FE directory into the container for live code changes
+
+  backend:
+    build:
+      context: ./backend
+    ports:
+      - "3001:3001" # Assuming your BE runs on port 8000
+    volumes:
+      - ./backend:/app # Mount BE directory into the container for live code changes
+    environment:
+      - MONGO_DB_URL=mongodb://mongo:27018/mydatabase # Adjust URL and database name as needed
+    depends_on:
+      - mongo
+
+  mongo:
+    image: mongo:latest
+    ports:
+      - "27018:27017"
+    volumes:
+      - mongo-data:/data/db
+
+volumes:
+  mongo-data:
